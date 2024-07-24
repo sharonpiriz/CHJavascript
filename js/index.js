@@ -8,9 +8,9 @@ datosDelUsuario();
 
 function datosDelUsuario() {
     montoSolicitado = parseInt(prompt('Ingrese cuanto desea solicitar'));
-    cuotasAPagar = parseInt(prompt('Ingrese en cuantas cuotas lo desea pagar. Antes de 6 meses tiene 5% de interes mensual, de lo contrario tiene 15% de interes mensual. Maximo 12 cuotas'));
+    cuotasAPagar = parseInt(prompt('Ingrese en cuantas cuotas lo desea pagar. Antes de 6 meses tiene 10% de interes mensual, de lo contrario tiene 15% de interes mensual.'));
 
-    alert(`El monto total a pagar es ` + calcularTotalConInteres(montoSolicitado, cuotasAPagar));
+    alert(`El monto total a pagar es $${parseInt(calcularTotalConInteres(montoSolicitado, cuotasAPagar))}`);
     let pagarPrestamo = parseInt(prompt('Desea realizar un pago? 1 - Si o 0 - No'));
     realizarPago(pagarPrestamo);
 
@@ -41,16 +41,24 @@ function calcularTotalConInteres(montoSolicitado, cuotas) {
 function realizarPago(pagarPrestamo) {
     if (pagarPrestamo === 1 || pagarPrestamo === 0) {
         while (pagarPrestamo === 1) {
+            if (montoTotalConInteres > 0) {
+                montoTotalConInteres = montoTotalConInteres - montoAPagarPorMes;
 
-            montoTotalConInteres = montoTotalConInteres - montoAPagarPorMes;
+                cuotasAPagar--;
 
-            cuotasAPagar--;
+                alert(`Se ha descontado $${montoAPagarPorMes}. Su saldo restante es de $${parseInt(montoTotalConInteres)} a pagar en ${cuotasAPagar} cuotas`);
+                pagarPrestamo = parseInt(prompt('Desea continuar pagado? 1 - Si o 0 - No'));
+            }
+            else {
+                alert('Ya no tiene dinero pendiente por pagar.');
+                pagarPrestamo = 0;
+            }
 
-            alert(`Se ha descontado ${montoAPagarPorMes}. Su saldo restante es de ${montoTotalConInteres} a pagar en ${cuotasAPagar} cuotas`);
-            pagarPrestamo = parseInt(prompt('Desea continuar pagado? 1 - Si o 0 - No'));
+        }
+        if (montoTotalConInteres > 0) {
+            alert(`Su saldo restante es $${parseInt(montoTotalConInteres)} a pagar en ${cuotasAPagar} cuotas. Gracias`);
         }
 
-        alert(`Su saldo restante es ${montoTotalConInteres} a pagar en ${cuotasAPagar} cuotas. Gracias`);
 
     } else {
         alert('Debe ingresar un 1 o 0 (Si - No)');
