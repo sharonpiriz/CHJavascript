@@ -1,69 +1,119 @@
-let montoSolicitado = 0;
-let cuotasAPagar = 0;
-let montoTotalConInteres = 0;
-let montoAPagarPorMes = 0;
-
-datosDelUsuario();
+//Elementos globales
 
 
-function datosDelUsuario() {
-    montoSolicitado = parseInt(prompt('Ingrese cuanto desea solicitar'));
-    cuotasAPagar = parseInt(prompt('Ingrese en cuantas cuotas lo desea pagar. Antes de 6 meses tiene 10% de interes mensual, de lo contrario tiene 15% de interes mensual.'));
+//Llamada de funciones
+inicializar();
 
-    alert(`El monto total a pagar es $${parseInt(calcularTotalConInteres(montoSolicitado, cuotasAPagar))}`);
-    let pagarPrestamo = parseInt(prompt('Desea realizar un pago? 1 - Si o 0 - No'));
-    realizarPago(pagarPrestamo);
-
+//Clases
+class Receta {
+    constructor(nombre, ingredientes, preparacion) {
+        this.nombre = nombre,
+            this.ingredientes = ingredientes,
+            this.preparacion = preparacion
+    }
 }
 
-function calcularTotalConInteres(montoSolicitado, cuotas) {
-    let interesMenor6meses = 0.10;
-    let interesMayor6meses = 0.15;
-    montoAPagarPorMes = parseInt(montoSolicitado / cuotas);
-    let montoMesInteres = 0;
-    montoTotalConInteres = montoSolicitado;
+class Recetas {
+    constructor() {
+        this.recetas = [];
+    }
 
-    if (cuotas <= 6) {
-        for (let i = 0; i < cuotas; i++) {
-            montoMesInteres = montoAPagarPorMes * interesMenor6meses;
-            montoTotalConInteres += montoMesInteres
-        }
-    } else {
-        for (let i = 0; i < cuotas; i++) {
-            montoMesInteres = montoAPagarPorMes * interesMayor6meses;
-            montoTotalConInteres += montoMesInteres;
+    agregarReceta(receta) {
+        recetas.push(receta)
+    }
+
+    obtenerNombreRecetas() {
+        return recetas.map((e, i) => `${i}: ${e.nombre}`)
+    }
+
+    buscarReceta(texto) {
+        let recetasEncontradas = recetas.filter(e => e.nombre.toLowerCase().includes(texto.toLowerCase()));
+        console.log(recetasEncontradas)
+
+        recetasEncontradas.forEach((e) => alert(`Nombre: ${e.nombre} \nIngredientes: ${e.ingredientes} \nPreparacion: ${e.preparacion} \n*Presione enter para pasar a la siguiente pantalla*`));
+
+        inicializar();
+    }
+
+    eliminarReceta(index) {
+        recetas.splice(index, 1);
+        alert('La receta fue eliminada correctamente');
+        inicializar();
+    }
+
+    mostrarRecetas() {
+        if (recetas.length > 0) {
+            recetas.forEach((e) => alert(`Nombre: ${e.nombre} \nIngredientes: ${e.ingredientes} \nPreparacion: ${e.preparacion} \n*Presione enter para pasar a la siguiente pantalla*`))
+            inicializar();
+        } else {
+            alert('No hay recetas disponibles');
+            inicializar();
         }
     }
 
-    return montoTotalConInteres;
+}
+//Instancia de clases
+
+const recetas = new Recetas();
+
+function inicializar() {
+    let opcion = parseInt(prompt('Bienvenido. \n Ingrese la opcion deseada: \n 1: Agregar Receta \n 2: Eliminar Receta \n 3: Buscar receta \n 4: Ver todas las recetas \n 0: Salir'));
+
+    switch (opcion) {
+        case 1: informacionAgregarReceta();
+            break;
+        case 2: informacionEliminarReceta();
+            break;
+        case 3: informacionBuscarReceta();
+            break;
+        case 4: recetas.mostrarRecetas();
+            break;
+        case 0:
+            break;
+        default: alert('Numero incorrecto. Comience nuevamente');
+            inicializar();
+            break;
+    }
 }
 
-function realizarPago(pagarPrestamo) {
-    if (pagarPrestamo === 1 || pagarPrestamo === 0) {
-        while (pagarPrestamo === 1) {
-            if (montoTotalConInteres > 0) {
-                montoTotalConInteres = montoTotalConInteres - montoAPagarPorMes;
+//Funciones de agregar receta
 
-                cuotasAPagar--;
+function informacionAgregarReceta() {
+    let nombre = '';
+    let ingredientes = '';
+    let preparacion = '';
+    let seguirAgregandoRecetas;
 
-                alert(`Se ha descontado $${montoAPagarPorMes}. Su saldo restante es de $${parseInt(montoTotalConInteres)} a pagar en ${cuotasAPagar} cuotas`);
-                pagarPrestamo = parseInt(prompt('Desea continuar pagado? 1 - Si o 0 - No'));
-            }
-            else {
-                alert('Ya no tiene dinero pendiente por pagar.');
-                pagarPrestamo = 0;
-            }
+    do {
+        nombre = prompt('Ingrese el nombre de la receta');
+        ingredientes = prompt('Ingrese los ingredientes');
+        preparacion = prompt('Ingrese la preparacion de la receta');
 
-        }
-        if (montoTotalConInteres > 0) {
-            alert(`Su saldo restante es $${parseInt(montoTotalConInteres)} a pagar en ${cuotasAPagar} cuotas. Gracias`);
-        }
+        crearReceta(nombre, ingredientes, preparacion);
 
+        seguirAgregandoRecetas = parseInt(prompt('Receta agregada correctamente. \n Desea seguir agregando recetas? 1- Si 0- No'))
 
-    } else {
-        alert('Debe ingresar un 1 o 0 (Si - No)');
-        pagarPrestamo = parseInt(prompt('Desea continuar pagado? 1 - Si o 0 - No'));
-        realizarPago(pagarPrestamo);
-    }
+    } while (seguirAgregandoRecetas != 0);
+    inicializar();
+}
 
+function crearReceta(nombre, ingredientes, preparacion) {
+    const receta = new Receta(nombre, ingredientes, preparacion);
+    recetas.agregarReceta(receta)
+}
+
+//Funciones buscar recetas
+
+function informacionBuscarReceta() {
+    let textoABuscar = prompt('Ingrese el texto a buscar (se busca por nombre de receta)');
+    recetas.buscarReceta(textoABuscar);
+}
+
+//Funciones eliminar recetas
+
+function informacionEliminarReceta() {
+    let nombreRecetas = recetas.obtenerNombreRecetas();
+    let recetaAEliminar = parseInt(prompt(`Ingrese el nombre de la receta a eliminar: \n${nombreRecetas.join('\n')}`));
+
+    recetas.eliminarReceta(recetaAEliminar);
 }
