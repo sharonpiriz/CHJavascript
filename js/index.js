@@ -7,9 +7,9 @@ inicializar();
 //Clases
 class Receta {
     constructor(nombre, ingredientes, preparacion) {
-        this.nombre = nombre,
-            this.ingredientes = ingredientes,
-            this.preparacion = preparacion
+        this.nombre = nombre;
+        this.ingredientes = ingredientes;
+        this.preparacion = preparacio;
     }
 }
 
@@ -19,15 +19,15 @@ class Recetas {
     }
 
     agregarReceta(receta) {
-        recetas.push(receta)
+        this.recetas.push(receta)
     }
 
     obtenerNombreRecetas() {
-        return recetas.map((e, i) => `${i}: ${e.nombre}`)
+        return this.recetas.map((e, i) => `${i}: ${e.nombre}`)
     }
 
     buscarReceta(texto) {
-        let recetasEncontradas = recetas.filter(e => e.nombre.toLowerCase().includes(texto.toLowerCase()));
+        let recetasEncontradas = this.recetas.filter(e => e.nombre.toLowerCase().includes(texto.toLowerCase()));
         console.log(recetasEncontradas)
 
         recetasEncontradas.forEach((e) => alert(`Nombre: ${e.nombre} \nIngredientes: ${e.ingredientes} \nPreparacion: ${e.preparacion} \n*Presione enter para pasar a la siguiente pantalla*`));
@@ -36,14 +36,14 @@ class Recetas {
     }
 
     eliminarReceta(index) {
-        recetas.splice(index, 1);
+        this.recetas.splice(index, 1);
         alert('La receta fue eliminada correctamente');
         inicializar();
     }
 
     mostrarRecetas() {
-        if (recetas.length > 0) {
-            recetas.forEach((e) => alert(`Nombre: ${e.nombre} \nIngredientes: ${e.ingredientes} \nPreparacion: ${e.preparacion} \n*Presione enter para pasar a la siguiente pantalla*`))
+        if (this.recetas.length > 0) {
+            this.recetas.forEach((e) => alert(`Nombre: ${e.nombre} \nIngredientes: ${e.ingredientes} \nPreparacion: ${e.preparacion} \n*Presione enter para pasar a la siguiente pantalla*`))
             inicializar();
         } else {
             alert('No hay recetas disponibles');
@@ -55,6 +55,8 @@ class Recetas {
 //Instancia de clases
 
 const recetas = new Recetas();
+
+//Funcion inicializar
 
 function inicializar() {
     let opcion = parseInt(prompt('Bienvenido. \n Ingrese la opcion deseada: \n 1: Agregar Receta \n 2: Eliminar Receta \n 3: Buscar receta \n 4: Ver todas las recetas \n 0: Salir'));
@@ -98,8 +100,8 @@ function informacionAgregarReceta() {
 }
 
 function crearReceta(nombre, ingredientes, preparacion) {
-    const receta = new Receta(nombre, ingredientes, preparacion);
-    recetas.agregarReceta(receta)
+    const receta1 = new Receta(nombre, ingredientes, preparacion);
+    recetas.agregarReceta(receta1)
 }
 
 //Funciones buscar recetas
