@@ -1,25 +1,11 @@
-//Elementos globales
-
-
-//Llamada de funciones
-inicializar();
-
 //Clases
-class Receta {
-    constructor(nombre, ingredientes, preparacion) {
-        this.nombre = nombre;
-        this.ingredientes = ingredientes;
-        this.preparacion = preparacion;
-    }
-}
-
 class Recetas {
     constructor() {
         this.recetas = [];
     }
 
     agregarReceta(receta) {
-        this.recetas.push(receta)
+        this.recetas.push(receta);
     }
 
     obtenerNombreRecetas() {
@@ -28,17 +14,14 @@ class Recetas {
 
     buscarReceta(texto) {
         let recetasEncontradas = this.recetas.filter(e => e.nombre.toLowerCase().includes(texto.toLowerCase()));
-        console.log(recetasEncontradas)
 
-        recetasEncontradas.forEach((e) => alert(`Nombre: ${e.nombre} \nIngredientes: ${e.ingredientes} \nPreparacion: ${e.preparacion} \n*Presione enter para pasar a la siguiente pantalla*`));
-
-        inicializar();
+        return recetasEncontradas;
     }
 
     eliminarReceta(index) {
         this.recetas.splice(index, 1);
         alert('La receta fue eliminada correctamente');
-        inicializar();
+
     }
 
     mostrarRecetas() {
@@ -50,16 +33,26 @@ class Recetas {
             inicializar();
         }
     }
-
 }
-//Instancia de clases
+class Receta {
+    constructor(nombre, ingredientes, preparacion) {
+        this.nombre = nombre;
+        this.ingredientes = ingredientes;
+        this.preparacion = preparacion;
+    }
+}
 
+//Instancia de clases
 const recetas = new Recetas();
+
+//Llamada de funciones
+inicializar();
+
 
 //Funcion inicializar
 
 function inicializar() {
-    let opcion = parseInt(prompt('Bienvenido. \n Ingrese la opcion deseada: \n 1: Agregar Receta \n 2: Eliminar Receta \n 3: Buscar receta \n 4: Ver todas las recetas \n 0: Salir'));
+    let opcion = parseInt(prompt('Bienvenido. \n Ingrese la opcion deseada: \n 1: Agregar receta \n 2: Eliminar receta \n 3: Buscar receta \n 4: Ver todas las recetas \n 0: Salir'));
 
     switch (opcion) {
         case 1: informacionAgregarReceta();
@@ -108,14 +101,37 @@ function crearReceta(nombre, ingredientes, preparacion) {
 
 function informacionBuscarReceta() {
     let textoABuscar = prompt('Ingrese el texto a buscar (se busca por nombre de receta)');
-    recetas.buscarReceta(textoABuscar);
+    let recetasEncontradas = recetas.buscarReceta(textoABuscar);
+
+    if (recetasEncontradas.length > 0) {
+        recetasEncontradas.forEach((e) => alert(`Nombre: ${e.nombre} \nIngredientes: ${e.ingredientes} \nPreparacion: ${e.preparacion} \n*Presione enter para pasar a la siguiente pantalla*`));
+        inicializar();
+    }
+    else {
+        alert('No se encontraron recetas.')
+        inicializar();
+    }
 }
 
 //Funciones eliminar recetas
 
 function informacionEliminarReceta() {
-    let nombreRecetas = recetas.obtenerNombreRecetas();
-    let recetaAEliminar = parseInt(prompt(`Ingrese el nombre de la receta a eliminar: \n${nombreRecetas.join('\n')}`));
+    if (recetas.recetas.length > 0) {
+        let nombreRecetas = recetas.obtenerNombreRecetas();
+        let recetaAEliminar = parseInt(prompt(`Ingrese el numero de la receta a eliminar: \n${nombreRecetas.join('\n')}`));
 
-    recetas.eliminarReceta(recetaAEliminar);
+        if (!isNaN(recetaAEliminar)) {
+            recetas.eliminarReceta(recetaAEliminar);
+            inicializar();
+        } else {
+            alert('Debe ingresar solo numeros')
+            inicializar();
+        }
+
+    }
+    else {
+        alert('No hay recetas disponibles para eliminar.')
+        inicializar();
+    }
+
 }
