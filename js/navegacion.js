@@ -13,7 +13,7 @@ const menuSecciones = [
     { nombre: 'Home', Url: 'index.html' },
     { nombre: 'Recetas', Url: 'recetas.html' },
     { nombre: 'Mis recetas', Url: 'misrecetas.html' },
-    { nombre: 'Shopping', Url: 'shopping.html' },
+    { nombre: 'Tienda', Url: 'tienda.html' },
     { nombre: 'Carrito', Url: 'carrito.html' },
     { nombre: 'Contacto', Url: 'contacto.html' }
 ]
