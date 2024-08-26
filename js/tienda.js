@@ -20,6 +20,7 @@ class Libros {
     }
 
     mostrarLibros(categoria) {
+        let index;
         if (this.libros.length > 0) {
             if (categoria === 'Todos') {
                 return this.libros?.map((e, index) =>
@@ -36,19 +37,26 @@ class Libros {
                 ).join('')
             }
             else {
-                return this.libros.filter(e => e.categoria === categoria)
-                    .map((e, index) =>
+                const librosFiltrados = this.libros.filter(e => e.categoria === categoria)
+                if (librosFiltrados.length > 0) {
+                    return librosFiltrados.map((e) => {
+                        index = this.libros.findIndex(libro => libro.nombre === e.nombre)
+                        return `
+                        <div id='card'>
+                            <img src="${e.imagenUrl}" width="200" height="300"/>
+                            <h2><strong>Titulo:</strong> ${e.nombre} </h2>
+                            <h2><strong>Descripcion:</strong> ${e.descripcion}</h2>
+                            <h2><strong>Categoria:</strong> ${e.categoria}</h2>
+                            <h2><strong>Precio:</strong> $${e.precio}</h2>
+                            <button id=${index} class='agregarCarrito'>Agregar al carrito</button>
+                        </div>
                         `
-                    <div id='card'>
-                        <img src="${e.imagenUrl}" width="200" height="300"/>
-                        <h2><strong>Titulo:</strong> ${e.nombre} </h2>
-                        <h2><strong>Descripcion:</strong> ${e.descripcion}</h2>
-                        <h2><strong>Categoria:</strong> ${e.categoria}</h2>
-                        <h2><strong>Precio:</strong> $${e.precio}</h2>
-                        <button id=${index} class='agregarCarrito'>Agregar al carrito</button>
-                    </div>
-                    `
+                    }
                     ).join('')
+                } else {
+                    return ''
+                }
+
             }
         }
         else {
@@ -108,6 +116,7 @@ const divContenedor = () => {
                                 <div>
                                     <button id='finalizarCompra'>Finalizar compra</button>
                                 </div>
+                                <div id='mensaje'> </div>
                             </section>
                             `
 
@@ -125,7 +134,14 @@ const mostrarLibros = () => {
 
     select.addEventListener('change', () => {
         const categoriaValor = select.value;
-        mostrarLibrosDiv.innerHTML = libros.mostrarLibros(categoriaValor).length > 0 ? libros.mostrarLibros(categoriaValor) : '<h3>No se encontraron libros para esta categoria<h3>';
+        const librosHTML = libros.mostrarLibros(categoriaValor)
+
+        if (librosHTML.length > 0) {
+            mostrarLibrosDiv.innerHTML = librosHTML
+            agregarAlCarrito()
+        } else {
+            mostrarLibrosDiv.innerHTML = '<h3>No se encontraron libros para esta categoria<h3>'
+        }
     })
 }
 
@@ -154,11 +170,27 @@ const agregarAlCarrito = () => {
 
 const guardarCompra = () => {
     const boton = document.querySelector('#finalizarCompra');
+    const mensaje = document.querySelector('#mensaje');
+    const carritoAnteriorJSON = obtenerDelStorage('carrito')
+    const carritoAnteriorOBJ = convertirAObj(carritoAnteriorJSON)
+
+    if (carritoAnteriorOBJ != null) {
+        carritoAnteriorOBJ.forEach((e) => {
+            carrito.push(e);
+        })
+    }
 
     boton.addEventListener('click', () => {
-        const carritoJSON = convertirAJSON(carrito);
-        guardarEnStorage('carrito', carritoJSON);
-        location.href = "carrito.html";
+        if (carrito.length > 0) {
+            const carritoJSON = convertirAJSON(carrito);
+            guardarEnStorage('carrito', carritoJSON);
+            location.href = "carrito.html";
+        } else {
+            mensaje.innerHTML = `<h3>Debe seleccionar al menos un producto para finalizar la compra</h3>`
+            setTimeout(() => {
+                mensaje.innerHTML = ''
+            }, 5000);
+        }
     })
 }
 
@@ -173,12 +205,16 @@ const convertirAJSON = (elemento) => {
     return JSON.stringify(elemento);
 }
 
+const convertirAObj = (elemento) => {
+    return JSON.parse(elemento);
+}
+
 const agregarAStorage = (nombre, valor) => {
     localStorage.setItem(nombre, valor);
 }
 
-const removerStorage = (nombre) => {
-    localStorage.removeItem(nombre);
+const obtenerDelStorage = (clave) => {
+    return localStorage.getItem(clave);
 }
 
 

@@ -42,31 +42,48 @@ class Recetas {
         if (this.recetas.length > 0) {
             if (categoria === 'Todas') {
                 return this.recetas?.map((e, index) => `
-                <div id='card'>
-                    <h2><strong>Nombre:</strong> ${e.nombre} </h2>
-                    <h2><strong>Ingredientes:</strong> ${e.ingredientes}</h2>
-                    <h2><strong>Preparacion:</strong> ${e.preparacion}</h2>
-                    <h2><strong>Categoria:</strong> ${e.categoria}</h2>
-                    <button id=${index} class='eliminarReceta'>Eliminar receta</button>
-                </div>
-                                                    `
+                    <div id='card' class='card'>
+                        <div class='header'>
+                            <p class='alert'><strong>Receta: </strong>${e.nombre}</p>
+                        </div>
+                        <p class='message'>
+                            <strong>Ingredientes: </strong>${e.ingredientes} <br>
+                            <strong>Preparacion: </strong>${e.preparacion} <br>
+                            <strong>Categoria: </strong>${e.categoria}
+                        </p>
+                        <div class='actions'>
+                            <a id='${index}' class='eliminarReceta read'>
+                            Eliminar Receta
+                            </a>
+                        </div>
+                    </div>
+                    `
                 ).join('');
             } else {
                 return this.recetas
                     .filter(e => e.categoria === categoria)
                     .map((e, index) => `
-                <div id='card'>
-                    <h2><strong>Nombre:</strong> ${e.nombre} </h2>
-                    <h2><strong>Ingredientes:</strong> ${e.ingredientes}</h2>
-                    <h2><strong>Preparacion:</strong> ${e.preparacion}</h2>
-                    <h2><strong>Categoria:</strong> ${e.categoria}</h2>
-                    <button id=${index} class='eliminarReceta'>Eliminar receta</button>
-                </div>
+
+                    <div id='card' class='card'>
+                        <div class='header'>
+                            <p class='alert'><strong>Receta: </strong>${e.nombre}</p>
+                        </div>
+                        <p class='message'>
+                            <strong>Ingredientes: </strong>${e.ingredientes} <br>
+                            <strong>Preparacion: </strong>${e.preparacion} <br>
+                            <strong>Categoria: </strong>${e.categoria}
+                        </p>
+                        <div class='actions'>
+                            <a id='${index}' class='eliminarReceta read'>
+                            Eliminar Receta
+                            </a>
+                        </div>
+                    </div>
                                                     `
                     ).join('');
             }
         } else {
-            return `<h2>No hay recetas disponibles<h2>`;
+            return `<h3>No hay recetas disponibles<h3>`;
         }
     }
 }
@@ -89,11 +106,13 @@ const divContenedor = () => {
     paginaRecetaActiva = false;
 
     contenedor.innerHTML = `    
-                            <button id='agregarReceta'>Agregar receta</button>
+                            <button id='agregarReceta' class='agregarReceta'>Agregar receta</button>
                             <h1>Todas las recetas</h1>
                             <label>Buscar receta </label>
-                            <input type='text' id='textoBuscar'/> 
-                            <button id='buscarReceta'>Buscar</button>
+                            <div class="search">
+                                <input id='textoBuscar' placeholder="Ingrese el texto" type="text">
+                                <button id='buscarReceta' type="submit">Go</button>
+                            </div>
                             <select id='categorias'>
                                 ${agregarCategorias()}
                             </select>
@@ -129,23 +148,31 @@ const agregarReceta = () => {
 
     agregarRecetaButton.addEventListener('click', () => {
         paginaRecetaActiva = true;
-        contenedor.innerHTML = `<div id='formAgregarReceta'>
-                                    <h1>Agregar Receta</h1>
-                                    <label>Nombre</label>
-                                    <input type='text' id='nombreReceta'/>
-    
-                                    <label>Ingredientes</label>
-                                    <input type='text' id='ingredientesReceta'/>
-    
-                                    <label>Preparacion</label>
-                                    <textArea id='preparacionReceta'></textArea>
-                                    <label>Categoria</label>
-                                    <select id='categorias'>
-                                        ${agregarCategorias()}
-                                    </select>
-    
-                                    <button id='agregarReceta2'>Agregar receta</button>
-                                </div>
+        contenedor.innerHTML = `
+                                <form class="form">
+                                    <p class="form-title">Agrega tu receta!</p>
+                                    <div class="input-container">
+                                        <input id='nombreReceta' type="text" placeholder="Nombre de receta">
+                                        <span>
+                                        </span>
+                                    </div>
+                                    <div class="input-container">
+                                        <input id='ingredientesReceta' type="text" placeholder="Ingedientes">
+                                    </div>
+                                    <div class="input-container">
+                                        <input id='preparacionReceta' type="text" placeholder="Preparacion">
+                                    </div>
+                                    <div class="input-container">
+                                        <label>Categoria</label>
+                                        <select id='categorias'>
+                                            ${agregarCategorias()}
+                                        </select>
+                                    </div>
+
+                                    <button type="submit" id='agregarReceta2' class="submit">
+                                        Guardar
+                                    </button>
+                                </form>
                                 `;
 
         const agregarReceta2Button = document.querySelector('#agregarReceta2');
@@ -203,7 +230,6 @@ const buscarReceta = () => {
         mostrarRecetasDiv.appendChild(recetasContainer);
 
         boton.addEventListener('click', () => {
-            console.log('entre al clic')
             divContenedor();
         })
     })
@@ -216,6 +242,7 @@ const eliminarReceta = () => {
 
     boton.forEach((e) => {
         e.addEventListener('click', (e) => {
+            console.log('aprete el boton')
             recetas.eliminarReceta(e.target.id)
             divContenedor()
         })
@@ -236,14 +263,27 @@ function informacionBuscarReceta(textoABuscar) {
 
     if (recetasEncontradas.length > 0) {
         return recetasEncontradas?.map((e) => `
-        <h2><strong>Nombre:</strong> ${e.nombre} </h2>
-        <h2><strong>Ingredientes:</strong> ${e.ingredientes}</h2>
-        <h2><stron>Preparacion:</strong> ${e.preparacion}</h2>
-                                        `
+
+         <div id='card' class='card'>
+            <div class='header'>
+                <p class='alert'><strong>Receta: </strong>${e.nombre}</p>
+            </div>
+            <p class='message'>
+                <strong>Ingredientes: </strong>${e.ingredientes} <br>
+                <strong>Preparacion: </strong>${e.preparacion} <br>
+                <strong>Categoria: </strong>${e.categoria}
+            </p>
+            <div class='actions'>
+                <a id='${index}' class='eliminarReceta read'>
+                Eliminar Receta
+                </a>
+            </div>
+        </div>
+        `
         ).join('');
     }
     else {
-        return `<h2>No se encontraron recetas disponibles<h2>`;
+        return `<h3>No se encontraron recetas disponibles<h3>`;
     }
 }
 
