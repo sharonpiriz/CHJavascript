@@ -1,5 +1,7 @@
 //VARIABLES GLOBALES
 let paginaRecetaActiva = false;
+let eliminarFuncionEjecutado = false;
+let divContenedorEjecutado = false;
 
 //CLASES
 class Recetas {
@@ -15,6 +17,18 @@ class Recetas {
                 nombre: 'tortilla',
                 ingredientes: 'papa, huevo',
                 preparacion: 'cocinar la papa y mezclar con el huevo',
+                categoria: 'Cena'
+            },
+            {
+                nombre: 'cupcakes',
+                ingredientes: 'harina, manteca, huevo, buttercream',
+                preparacion: 'realizar la masa, hornear y luego decorar',
+                categoria: 'Merienda'
+            },
+            {
+                nombre: 'salmon a la plancha',
+                ingredientes: 'salmon, condimentos',
+                preparacion: 'poner los condimentos en el salmon y hacer a la parrilla hasta obtener la coccion deseada',
                 categoria: 'Cena'
             }
         ];
@@ -39,6 +53,7 @@ class Recetas {
     }
 
     mostrarRecetas(categoria) {
+        let ix;
         if (this.recetas.length > 0) {
             if (categoria === 'Todas') {
                 return this.recetas?.map((e, index) => `
@@ -60,9 +75,10 @@ class Recetas {
                     `
                 ).join('');
             } else {
-                return this.recetas
-                    .filter(e => e.categoria === categoria)
-                    .map((e, index) => `
+                const recetasFiltradas = this.recetas.filter(e => e.categoria === categoria)
+                return recetasFiltradas.map((e, index) => {
+                    ix = this.recetas.findIndex(receta => receta.ingredientes === e.ingredientes)
+                    return `
 
                     <div id='card' class='card'>
                         <div class='header'>
@@ -74,13 +90,13 @@ class Recetas {
                             <strong>Categoria: </strong>${e.categoria}
                         </p>
                         <div class='actions'>
-                            <a id='${index}' class='eliminarReceta read'>
+                            <a id='${ix}' class='eliminarReceta read'>
                             Eliminar Receta
                             </a>
                         </div>
                     </div>
                                                     `
-                    ).join('');
+                }).join('');
             }
         } else {
             return `<h3>No hay recetas disponibles<h3>`;
@@ -104,20 +120,32 @@ const recetas = new Recetas();
 const divContenedor = () => {
     const contenedor = document.querySelector('#contenedor');
     paginaRecetaActiva = false;
+    divContenedorEjecutado = false;
 
-    contenedor.innerHTML = `    
-                            <button id='agregarReceta' class='agregarReceta'>Agregar receta</button>
-                            <h1>Todas las recetas</h1>
-                            <label>Buscar receta </label>
-                            <div class="search">
-                                <input id='textoBuscar' placeholder="Ingrese el texto" type="text">
-                                <button id='buscarReceta' type="submit">Go</button>
-                            </div>
-                            <select id='categorias'>
-                                ${agregarCategorias()}
-                            </select>
-                            <div id='mostrarRecetas'>
-                            </div>
+    contenedor.innerHTML = ` 
+                            <section> 
+                                <h1>Todas las recetas</h1>
+                                <div class='agregarRecetaDiv'>
+                                    <button id='agregarReceta' class='agregarReceta'>Agregar receta</button>
+                                </div>
+                                <div class="search">
+                                    <label for='textoBuscar'>Buscar receta </label>
+                                    <input id='textoBuscar' placeholder="Ingrese el texto" type="text">
+                                    <button id='buscarReceta' type="submit">Go</button>
+                                </div>
+                                <div>
+                                    <select id='categorias'>
+                                        ${agregarCategorias()}
+                                    </select>
+                                </div>
+                            </section> 
+                            <section>
+                                <div id='mostrarRecetas' class='mostrarRecetasDiv'>
+                                </div>
+                                <div id='mensaje'>
+                                    
+                                </div>
+                            </section>
                             `
 
     mostrarRecetas();
@@ -126,17 +154,40 @@ const divContenedor = () => {
     eliminarReceta();
 }
 
+//MOSTRAR MENSAJE
+const actualizarMensaje = (msj) => {
+    const mensaje = document.querySelector('#mensaje')
+
+    mensaje.innerHTML = eliminarFuncionEjecutado ? `<h3>${msj}</h3>` : ``
+
+    if (eliminarFuncionEjecutado) {
+        setTimeout(() => {
+            mensaje.innerHTML = '';
+        }, 3000);
+    }
+}
+
+
 //MOSTRAR RECETAS LAYOUT
 
 const mostrarRecetas = () => {
     const select = document.querySelector('#categorias');
     const mostrarRecetasDiv = document.querySelector('#mostrarRecetas');
-
     mostrarRecetasDiv.innerHTML = recetas.mostrarRecetas('Todas');
 
     select.addEventListener('change', () => {
         const categoriaSeleccionada = select.value;
-        mostrarRecetasDiv.innerHTML = recetas.mostrarRecetas(categoriaSeleccionada).length > 0 ? recetas.mostrarRecetas(categoriaSeleccionada) : `<h3>No se encontraron recetas en esta categoria<h3>`;
+        agregarStorage('categoria', categoriaSeleccionada);
+
+        if (recetas.mostrarRecetas
+            (categoriaSeleccionada).length > 0) {
+            mostrarRecetasDiv.innerHTML = recetas.mostrarRecetas(categoriaSeleccionada)
+            eliminarReceta();
+        }
+        else {
+            mostrarRecetasDiv.innerHTML = `<h3>No se encontraron recetas en esta categoria<h3>`;
+        }
+
     })
 }
 
@@ -149,7 +200,7 @@ const agregarReceta = () => {
     agregarRecetaButton.addEventListener('click', () => {
         paginaRecetaActiva = true;
         contenedor.innerHTML = `
-                                <form class="form">
+                                <form class="form formulario">
                                     <p class="form-title">Agrega tu receta!</p>
                                     <div class="input-container">
                                         <input id='nombreReceta' type="text" placeholder="Nombre de receta">
@@ -185,6 +236,7 @@ const agregarReceta = () => {
 
             crearReceta({ nombre, ingredientes, preparacion, categoria })
             divContenedor();
+            actualizarMensaje('La receta ha sido creada');
         })
     })
 }
@@ -238,13 +290,14 @@ const buscarReceta = () => {
 //ELIMINAR RECETA LAYOUT
 
 const eliminarReceta = () => {
-    const boton = document.querySelectorAll('.eliminarReceta')
+    const boton = document.querySelectorAll('.eliminarReceta');
 
     boton.forEach((e) => {
         e.addEventListener('click', (e) => {
-            console.log('aprete el boton')
             recetas.eliminarReceta(e.target.id)
-            divContenedor()
+            eliminarFuncionEjecutado = true;
+            divContenedor();
+            actualizarMensaje('La receta ha sido eliminada');
         })
     })
 }
@@ -285,6 +338,25 @@ function informacionBuscarReceta(textoABuscar) {
     else {
         return `<h3>No se encontraron recetas disponibles<h3>`;
     }
+}
+
+//LOCAL STORAGE
+
+const agregarStorage = (clave, valor) => {
+    localStorage.setItem(clave, valor);
+}
+
+const obtenerStorage = (clave) => {
+    return localStorage.getItem(clave);
+}
+
+const actualizarStorage = (clave, valor) => {
+    eliminarStorage(clave);
+    localStorage.setItem(clave, valor);
+}
+
+const eliminarStorage = () => {
+    localStorage.removeItem(clave);
 }
 
 //LLAMADO DE FUNCIONES
