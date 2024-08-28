@@ -8,12 +8,17 @@ const divContenedor = () => {
     const contenedor = document.createElement('div');
 
     contenedor.innerHTML = `
-                            <h2>Mi carrito</h2>
-                            <section>                       <div id='mostrarLibros'></div>   
-                            <div>
-                            <button id='agregarProductos'>Agregar productos</button</div>
-                            </section>
-
+                            <div class='contenedor'>
+                                <section class'section1'>
+                                    <h2>Mi Carrito</h2>
+                                </section>
+                                <section class='section2'>                   
+                                    <div id='mostrarLibros' class='mostrarListaLibros'></div>   
+                                </section>
+                                <section class='section3'>
+                                    <button id='agregarProductos' class='btn'>Agregar productos</button>
+                                </section>
+                            </div>
                             `
 
     main.appendChild(contenedor);
@@ -33,14 +38,22 @@ const mostrarLibros = () => {
     if (objetoParse != null) {
         objetoParse.map((e, index) => {
             lista += `
-                    <div id='card'>
-                        <img src="${e.imagenUrl}" width="200" height="300"/>
-                        <h2><strong>Titulo:</strong> ${e.nombre} </h2>
-                        <h2><strong>Descripcion:</strong> ${e.descripcion}</h2>
-                        <h2><strong>Categoria:</strong> ${e.categoria}</h2>
-                        <h2><strong>Precio:</strong> $${e.precio}</h2>
-                        <button id='${index}' class='eliminarCarrito'>Eliminar del carrito</button>
-                    </div>
+                        <div id='card' class='item'>
+                            <h3><strong>Titulo:</strong> ${e.nombre} </h3>
+                            <figure>
+                                <img src="${e.imagenUrl}" alt='${e.nombre}'/>
+                            </figure>
+                            <p class='description'>${e.descripcion}</p>
+                            <p class='special'><strong>Precio</strong>
+                            $${e.precio}
+                            </p>
+                            <p class='special'><strong>Categoria</strong>
+                            ${e.categoria}
+                            </p>
+                            <div class='buttonDiv'>
+                                <button id=${index} class='eliminarCarrito type='button'>Eliminar del carrito</button>
+                            </div>
+                        </div>
                     `
         })
     } else {
@@ -58,6 +71,7 @@ const eliminarDeCarrito = () => {
             const objJSON = convertirAJSON(carrito);
             actualizarLS(objJSON, 'carrito')
             location.reload();
+
         })
     })
 }

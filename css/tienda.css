@@ -4,3 +4,204 @@ body{
     font-family: Raleway;
     margin-top: 100px;
 }
+
+/* CONTENEDOR */
+
+.contenedor{
+    display: grid;
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    border: 2px solid #DDC5B3;
+    border-radius: 30px;
+}
+
+h2{
+    text-align: center;
+}
+
+.labelSelect{
+    margin-left: 12rem;
+}
+
+select {
+	padding: 0.8rem 1.2rem;
+	border: solid 1px #d0cccc;
+	margin-bottom: 1.2rem;
+    margin-left: 0.5rem;
+	outline: none;
+	border-radius: 0.75rem;
+	transition: box-shadow 200ms ease-out;
+    font-size: 1rem;
+}
+
+select:focus,
+select:active {
+	box-shadow: 0 0 0 0.25rem rgba(43, 153, 255, 0.5);
+}
+
+label {
+	margin-bottom: 0.7rem;
+}
+
+.mostrarListaLibros{
+    margin-top: 2%;
+    display: grid;
+    grid-template-columns: 50% 50%;
+    justify-items: center;
+}
+
+.section3{
+    display: grid;
+    justify-content: center;
+    margin: 2% 0;
+}
+
+
+/* CARDS */
+.item {
+	background-color: rgba(255, 255, 255, 0.5);
+    border: solid 2px #DDC5B3;
+	width: calc(100% - calc(4.8rem * 2));
+	max-width: 480px;
+	padding: 2.1rem;
+	margin-bottom: 2.2rem;
+	display: flex;
+	flex-direction: column;
+	border-radius: 1.7rem;
+	box-shadow: 0 1.5rem 3rem rgba(0, 0, 0, 0.2);
+	transform: translateY(-1rem);
+	backdrop-filter: blur(1.5rem);
+}
+
+.item:last-child {
+	margin-bottom: 0.5rem;
+}
+
+.item h3 {
+	font-size: 1.5rem;
+	font-weight: bold;
+	height: 2.8rem;
+	margin-bottom: 0.5rem;
+}
+
+.item figure {
+	width: 100%;
+	display: flex;
+    margin: 0;
+	justify-content: center;
+	overflow: hidden;
+}
+
+.item figure img {
+	height: 320px;
+	display: block;
+	border-radius: 1.5rem;
+}
+
+.description {
+	color: rgba(255, 255, 255, 0.7);
+	background-color: rgba(0, 0, 0, 0.623);
+	width: calc(100% - calc(2.8rem * 2));
+	height: 320px;
+	line-height: 1.75rem;
+	padding: 2.0rem;
+	position: absolute;
+	top: calc(2.3rem + 3.0rem);
+	left: 2.8rem;
+	overflow: auto;
+	opacity: 0;
+	border-radius: 1.5rem;
+	transition: opacity 200ms ease-out;
+    font-size: 1.5rem;
+}
+
+.item figure:hover + .description,
+.description:hover {
+	opacity: 1;
+}
+
+.buttonDiv {
+    display: flex;
+    justify-content: center;
+    margin-top: 5%;
+}
+
+.item button {
+	width: 80%;
+	color: white;
+	font-size: 1.3rem;
+	font-weight: bold;
+	text-shadow: 0 -1px #ffc233;
+    background-image: linear-gradient(to right top, #e6d9d0, #e4d4c9, #e2cfc1, #dfcaba, #ddc5b3);
+	padding: 1.2rem;
+	border: solid 1px #E6D9D0;
+	outline: none;
+	border-radius: 2.5rem / 50%;
+	transition: filter 500ms ease-out;
+}
+
+.item button:hover {
+	filter: brightness(90%);
+}
+
+.item button:active {
+	filter: brightness(80%);
+}
+
+.special {
+	margin-bottom: 0rem;
+}
+
+/*BOTON FINALIZAR COMPRA*/
+
+.btn {
+    position: relative;
+    font-size: 20px;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 1em 2.5em !important;
+    display: inline-block;
+    border-radius: 2em;
+    transition: all .2s;
+    border: none;
+    font-family: inherit;
+    font-weight: 500;
+    color: white;
+    background-color: #ddc5b3;
+   }
+   
+   .btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+   }
+   
+   .btn:active {
+    transform: translateY(-1px);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+   }
+   
+   .btn::after {
+    content: "";
+    display: inline-block;
+    height: 100%;
+    width: 100%;
+    border-radius: 100px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    transition: all .4s;
+   }
+   
+   .btn::after {
+    background-color: white;
+   }
+   
+   .btn:hover::after {
+    transform: scaleX(1.4) scaleY(1.6);
+    opacity: 0;
+   }
+
+
+

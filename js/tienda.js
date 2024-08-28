@@ -25,13 +25,21 @@ class Libros {
             if (categoria === 'Todos') {
                 return this.libros?.map((e, index) =>
                     `
-                    <div id='card'>
-                        <img src="${e.imagenUrl}" width="200" height="300"/>
-                        <h2><strong>Titulo:</strong> ${e.nombre} </h2>
-                        <h2><strong>Descripcion:</strong> ${e.descripcion}</h2>
-                        <h2><strong>Categoria:</strong> ${e.categoria}</h2>
-                        <h2><strong>Precio:</strong> $${e.precio}</h2>
-                        <button id=${index} class='agregarCarrito'>Agregar al carrito</button>
+                    <div id='card' class='item'>
+                        <h3><strong>Titulo:</strong> ${e.nombre} </h3>
+                        <figure>
+                            <img src="${e.imagenUrl}" alt='${e.nombre}'/>
+                        </figure>
+                        <p class='description'>${e.descripcion}</p>
+                        <p class='special'><strong>Precio</strong>
+                        $${e.precio}
+                        </p>
+                        <p class='special'><strong>Categoria</strong>
+                        ${e.categoria}
+                        </p>
+                        <div class='buttonDiv'>
+                            <button id=${index} class='agregarCarrito type='button'>Agregar al carrito</button>
+                        </div>
                     </div>
                     `
                 ).join('')
@@ -42,13 +50,21 @@ class Libros {
                     return librosFiltrados.map((e) => {
                         index = this.libros.findIndex(libro => libro.nombre === e.nombre)
                         return `
-                        <div id='card'>
-                            <img src="${e.imagenUrl}" width="200" height="300"/>
-                            <h2><strong>Titulo:</strong> ${e.nombre} </h2>
-                            <h2><strong>Descripcion:</strong> ${e.descripcion}</h2>
-                            <h2><strong>Categoria:</strong> ${e.categoria}</h2>
-                            <h2><strong>Precio:</strong> $${e.precio}</h2>
-                            <button id=${index} class='agregarCarrito'>Agregar al carrito</button>
+                        <div id='card' class='item'>
+                            <h3><strong>Titulo:</strong> ${e.nombre} </h3>
+                            <figure>
+                                <img src="${e.imagenUrl}" alt='${e.nombre}'/>
+                            </figure>
+                            <p class='description'>${e.descripcion}</p>
+                            <p class='special'><strong>Precio</strong>
+                            $${e.precio}
+                            </p>
+                            <p class='special'><strong>Categoria</strong>
+                            ${e.categoria}
+                            </p>
+                            <div class='buttonDiv'>
+                                <button id=${index} class='agregarCarrito type='button'>Agregar al carrito</button>
+                            </div>
                         </div>
                         `
                     }
@@ -104,20 +120,29 @@ const divContenedor = () => {
     const contenedor = document.createElement('div');
 
     contenedor.innerHTML = `
-                            <section>
-                                <h2>Tienda</h2>
-                                <select id='categoriaSlc'> 
-                                ${agregarCategorias()}
-                                </select>
-                            </section>
-                            <section>
-                                <div id='mostrarListaLibros'>
-                                </div>
-                                <div>
-                                    <button id='finalizarCompra'>Finalizar compra</button>
-                                </div>
-                                <div id='mensaje'> </div>
-                            </section>
+                            <div class='contenedor'>
+                                <section class'section1'>
+                                    <h2>Tienda</h2>
+                                    <div class='labelSelect'>
+                                        <label>Categoria</label>
+                                        <select id='categoriaSlc'> 
+                                        ${agregarCategorias()}
+                                        </select>
+                                    </div>
+                                    </select>
+                                </section>
+                                <section class'section2'>
+                                    <div id='mostrarListaLibros' class='mostrarListaLibros'>
+                                    </div>
+                                </section>
+                                <section class='section3'>
+                                    <button id='finalizarCompra' class="btn"> Finalizar compra</button>
+
+                                </section>
+                                <section class='section4'>
+                                    <div id='mensaje'> </div>
+                                </section> 
+                            </div>
                             `
 
     main.appendChild(contenedor);
@@ -164,6 +189,15 @@ const agregarAlCarrito = () => {
         e.addEventListener('click', (e) => {
             const producto = libros.obtenerProducto(e.target.id);
             carrito.push(producto)
+            Toastify({
+                text: `${producto.nombre} se agrego al carrito`,
+                close: true,
+                gravity: 'bottom',
+                style: {
+                    color: 'black',
+                    background: "#ddc5b3",
+                }
+            }).showToast();
         })
     });
 }

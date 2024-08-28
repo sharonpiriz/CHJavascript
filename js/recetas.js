@@ -125,22 +125,28 @@ const divContenedor = () => {
     contenedor.innerHTML = ` 
                             <section> 
                                 <h1>Todas las recetas</h1>
+                            </section> 
+
+                            <section class='sectionContenedor'> 
                                 <div class='agregarRecetaDiv'>
                                     <button id='agregarReceta' class='agregarReceta'>Agregar receta</button>
+                                </div>
+                                <div class='labelSelect'>
+                                    <label>Categoria</label>
+                                    <select id='categorias'> 
+                                    ${agregarCategorias()}
+                                    </select>
                                 </div>
                                 <div class="search">
                                     <label for='textoBuscar'>Buscar receta </label>
                                     <input id='textoBuscar' placeholder="Ingrese el texto" type="text">
-                                    <button id='buscarReceta' type="submit">Go</button>
-                                </div>
-                                <div>
-                                    <select id='categorias'>
-                                        ${agregarCategorias()}
-                                    </select>
+                                    <button id='buscarReceta' type="submit">Buscar</button>
                                 </div>
                             </section> 
                             <section>
                                 <div id='mostrarRecetas' class='mostrarRecetasDiv'>
+                                </div>
+                                <div id='contenedorBoton'>
                                 </div>
                                 <div id='mensaje'>
                                     
@@ -266,20 +272,21 @@ const agregarCategorias = () => {
 const buscarReceta = () => {
     const mostrarRecetasDiv = document.querySelector('#mostrarRecetas');
     const buscarRecetaButton = document.querySelector('#buscarReceta');
+    const contenedorBoton = document.querySelector('#contenedorBoton')
 
     buscarRecetaButton.addEventListener('click', () => {
         mostrarRecetasDiv.innerHTML = '';
         const buscarRecetaValue = document.querySelector('#textoBuscar').value;
         const boton = document.createElement('button');
         boton.setAttribute('id', 'botonVolver');
+        boton.setAttribute('class', 'btn');
         const contenido = document.createTextNode('Volver a la lista');
 
         boton.appendChild(contenido);
-        mostrarRecetasDiv.appendChild(boton);
+        contenedorBoton.appendChild(boton);
+        console.log('me ejecute')
 
-        const recetasContainer = document.createElement('div');
-        recetasContainer.innerHTML = informacionBuscarReceta(buscarRecetaValue);
-        mostrarRecetasDiv.appendChild(recetasContainer);
+        mostrarRecetasDiv.innerHTML = informacionBuscarReceta(buscarRecetaValue);
 
         boton.addEventListener('click', () => {
             divContenedor();
@@ -315,7 +322,7 @@ function informacionBuscarReceta(textoABuscar) {
     let recetasEncontradas = recetas.buscarReceta(textoABuscar);
 
     if (recetasEncontradas.length > 0) {
-        return recetasEncontradas?.map((e) => `
+        return recetasEncontradas?.map((e, index) => `
 
          <div id='card' class='card'>
             <div class='header'>
