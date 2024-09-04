@@ -12,7 +12,6 @@ const secciones = [
         id: 'nombre',
         nombre: `Bienvenido ${usernameActivo}`,
     },
-
     {
         nombre: 'Recetas',
         direccion: 'recetas.html'
@@ -73,12 +72,17 @@ const incializador = () => {
                 ul.innerHTML += `
                 <li><a href=${s.direccion} id='registro'>${s.nombre}</a></li>
                 `
-            } else if (s.id === 'nombre' && objetoSesion) {
-                ul.innerHTML += `
-                <li><a>${s.nombre}</a></li>
-                `
-            }
-            else {
+            } else if (s.id === 'nombre') {
+                if (objetoSesion) {
+                    ul.innerHTML += `
+                    <li><a>${s.nombre}</a></li>
+                    `
+                } else {
+                    ul.innerHTML += `
+                    <li><a>Bienvenido</a></li>
+                    `
+                }
+            } else {
                 ul.innerHTML += `
             <li><a href='${s.direccion}'>${s.nombre}</a></li>
             `

@@ -242,13 +242,6 @@ const guardarCompra = () => {
     let usernameActivo;
     if (sesionActivaOBJ) usernameActivo = sesionActivaOBJ.username
 
-    if (userCarritoActualOBJ != null) {
-        const usuarioCarritoActivo = userCarritoActualOBJ.find(user => user.username === usernameActivo)
-        !usuarioCarritoActivo ? [] : usuarioCarritoActivo.carrito.forEach((e) => {
-            carrito.push(e);
-        })
-    }
-
     if (localStorage.getItem('sesionActiva')) {
         boton.addEventListener('click', () => {
             if (carrito.length > 0) {
@@ -277,7 +270,6 @@ const guardarEnStorage = (nombreClave, valor) => {
     const valorJSON = convertirAJSON(valor);
     agregarAStorage(nombreClave, valorJSON);
 }
-
 
 const convertirAJSON = (elemento) => {
     return JSON.stringify(elemento);

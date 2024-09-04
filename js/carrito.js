@@ -85,7 +85,7 @@ const mostrarLibros = () => {
 
     carrito = usuarioCarritoActivo ? usuarioCarritoActivo.carrito : [];
 
-    if (carrito != undefined & carrito != null) {
+    if (carrito && carrito.length > 0) {
         carrito.map((e, index) => {
             lista += `
                         <div id='card' class='item'>
