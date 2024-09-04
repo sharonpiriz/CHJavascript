@@ -61,3 +61,10 @@ body {
 		transform: translateX(-25%);
 	}
 }
+
+.swal2-confirm{
+	background-color: #ddc5b3 !important;
+	}
+	.swal2-cancel{
+		background-color: #B9B9B9 !important;
+	}

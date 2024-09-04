@@ -2,8 +2,34 @@
 
 body{
     font-family: Raleway;
-    margin-top: 100px;
+	margin: 0;
+	padding: 0;
 }
+
+#main{
+    margin-top: 100px;
+	margin-bottom: 100px;
+}
+
+/*IMAGEN Y TEXTO SOBRE IMAGEN*/
+
+.sectionImg{
+    background-image: url('https://images.unsplash.com/photo-1510172951991-856a654063f9?q=80&w=2362&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+    width: 100%;
+    height: 800px;
+    background-size: cover;
+    background-position: 0px 1300px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .divTexto{
+    margin-top: 650px;
+    margin-left: 50px;
+    color: black;
+    font-size: 110px;
+    font-weight: bold;
+  }
 
 /* CONTENEDOR */
 
@@ -42,6 +68,11 @@ select:active {
 
 label {
 	margin-bottom: 0.7rem;
+}
+
+.loader{
+    display: grid;
+    justify-items: center;
 }
 
 .mostrarListaLibros{
@@ -169,39 +200,151 @@ label {
     font-weight: 500;
     color: white;
     background-color: #ddc5b3;
-   }
-   
-   .btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-   }
-   
-   .btn:active {
-    transform: translateY(-1px);
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-   }
-   
-   .btn::after {
-    content: "";
-    display: inline-block;
-    height: 100%;
-    width: 100%;
-    border-radius: 100px;
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: -1;
-    transition: all .4s;
-   }
-   
-   .btn::after {
-    background-color: white;
-   }
-   
-   .btn:hover::after {
-    transform: scaleX(1.4) scaleY(1.6);
-    opacity: 0;
-   }
+}
+
+.btn:hover {
+transform: translateY(-3px);
+box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.btn:active {
+transform: translateY(-1px);
+box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+.btn::after {
+content: "";
+display: inline-block;
+height: 100%;
+width: 100%;
+border-radius: 100px;
+position: absolute;
+top: 0;
+left: 0;
+z-index: -1;
+transition: all .4s;
+}
+
+.btn::after {
+background-color: white;
+}
+
+.btn:hover::after {
+transform: scaleX(1.4) scaleY(1.6);
+opacity: 0;
+}
+
+.swal2-confirm{
+background-color: #ddc5b3 !important;
+}
+.swal2-cancel{
+    background-color: #B9B9B9 !important;
+}
 
 
+/*LOADER*/
 
+.dot-spinner {
+	--uib-size: 2.8rem;
+	--uib-speed: .9s;
+	--uib-color: #183153;
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	height: var(--uib-size);
+	width: var(--uib-size);
+  }
+  
+  .dot-spinner__dot {
+	position: absolute;
+	top: 0;
+	left: 0;
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	height: 100%;
+	width: 100%;
+  }
+  
+  .dot-spinner__dot::before {
+	content: '';
+	height: 20%;
+	width: 20%;
+	border-radius: 50%;
+	background-color: var(--uib-color);
+	transform: scale(0);
+	opacity: 0.5;
+	animation: pulse0112 calc(var(--uib-speed) * 1.111) ease-in-out infinite;
+	box-shadow: 0 0 20px rgba(18, 31, 53, 0.3);
+  }
+  
+  .dot-spinner__dot:nth-child(2) {
+	transform: rotate(45deg);
+  }
+  
+  .dot-spinner__dot:nth-child(2)::before {
+	animation-delay: calc(var(--uib-speed) * -0.875);
+  }
+  
+  .dot-spinner__dot:nth-child(3) {
+	transform: rotate(90deg);
+  }
+  
+  .dot-spinner__dot:nth-child(3)::before {
+	animation-delay: calc(var(--uib-speed) * -0.75);
+  }
+  
+  .dot-spinner__dot:nth-child(4) {
+	transform: rotate(135deg);
+  }
+  
+  .dot-spinner__dot:nth-child(4)::before {
+	animation-delay: calc(var(--uib-speed) * -0.625);
+  }
+  
+  .dot-spinner__dot:nth-child(5) {
+	transform: rotate(180deg);
+  }
+  
+  .dot-spinner__dot:nth-child(5)::before {
+	animation-delay: calc(var(--uib-speed) * -0.5);
+  }
+  
+  .dot-spinner__dot:nth-child(6) {
+	transform: rotate(225deg);
+  }
+  
+  .dot-spinner__dot:nth-child(6)::before {
+	animation-delay: calc(var(--uib-speed) * -0.375);
+  }
+  
+  .dot-spinner__dot:nth-child(7) {
+	transform: rotate(270deg);
+  }
+  
+  .dot-spinner__dot:nth-child(7)::before {
+	animation-delay: calc(var(--uib-speed) * -0.25);
+  }
+  
+  .dot-spinner__dot:nth-child(8) {
+	transform: rotate(315deg);
+  }
+  
+  .dot-spinner__dot:nth-child(8)::before {
+	animation-delay: calc(var(--uib-speed) * -0.125);
+  }
+  
+  @keyframes pulse0112 {
+	0%,
+	100% {
+	  transform: scale(0);
+	  opacity: 0.5;
+	}
+  
+	50% {
+	  transform: scale(1);
+	  opacity: 1;
+	}
+  }
+  

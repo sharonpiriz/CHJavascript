@@ -1,5 +1,4 @@
 //CLASES
-
 class Libro {
     constructor(nombre, descripcion, precio, imagenUrl, categoria) {
         this.nombre = nombre,
@@ -9,7 +8,6 @@ class Libro {
             this.categoria = categoria
     }
 }
-
 class Libros {
     constructor() {
         this.libros = [];
@@ -21,7 +19,8 @@ class Libros {
 
     mostrarLibros(categoria) {
         let index;
-        if (this.libros.length > 0) {
+
+        if (this.libros != undefined || this.libros != null || this.libros.length > 0) {
             if (categoria === 'Todos') {
                 return this.libros?.map((e, index) =>
                     `
@@ -72,7 +71,6 @@ class Libros {
                 } else {
                     return ''
                 }
-
             }
         }
         else {
@@ -85,44 +83,35 @@ class Libros {
     }
 }
 
-//CREACION DE INSTANCIAS Y CARGA DE DATOS
-
-const libros = new Libros();
-
-const libro1 = new Libro('The Beauty Chef', 'Libro de recetas', '700', '../imagenes/imagen1.jpeg', 'Desayuno');
-const libro2 = new Libro('Beauty food', 'Libro de recetas', '500', 'imagenes/imagen2.jpeg', 'Postre');
-const libro3 = new Libro('Breakfast', 'Libro de recetas', '1000', 'imagenes/imagen3.jpeg', 'Desayuno');
-const libro4 = new Libro('Eat beautiful', 'Libro de recetas', '1300', 'imagenes/imagen4.jpeg', 'Almuerzo');
-const libro5 = new Libro('Pasta grannies', 'Libro de recetas', '1200', 'imagenes/imagen5.jpeg', 'Almuerzo');
-const libro6 = new Libro('The baking journal', 'Libro de recetas', '600', 'imagenes/imagen6.jpeg', 'Merienda');
-const libro7 = new Libro('Cuaderno de recetas', 'Libro de recetas', '900', 'imagenes/imagen7.jpeg', 'Cena');
-const libro8 = new Libro('My french family table', 'Libro de recetas', '750', 'imagenes/imagen8.jpeg', 'Almuerzo');
-const libro9 = new Libro('The food lab', 'Libro de recetas', '1400', 'imagenes/imagen9.jpeg', 'Merienda');
-
-libros.agregarLibro(libro1);
-libros.agregarLibro(libro2);
-libros.agregarLibro(libro3);
-libros.agregarLibro(libro4);
-libros.agregarLibro(libro5);
-libros.agregarLibro(libro6);
-libros.agregarLibro(libro7);
-libros.agregarLibro(libro8);
-libros.agregarLibro(libro9);
-
 //GLOBAL
-
 const main = document.querySelector('#main');
 const carrito = [];
+const userCarrito = [];
+let fetchCargado = false;
+
+//CREACION DE INSTANCIAS Y CARGA DE DATOS
+const libros = new Libros();
+
+//FETCH
+const peticionFetch = () => {
+    fetch('/productosTienda.json')
+        .then((respuesta) => respuesta.json())
+        .then((data) => {
+            fetchCargado = true;
+            for (const d of data) {
+                const libro = new Libro(d.nombre, d.descripcion, d.precio, d.imagenUrl, d.categoria)
+                libros.agregarLibro(libro)
+            }
+        })
+}
 
 //LAYOUT
-
 const divContenedor = () => {
     const contenedor = document.createElement('div');
 
     contenedor.innerHTML = `
                             <div class='contenedor'>
                                 <section class'section1'>
-                                    <h2>Tienda</h2>
                                     <div class='labelSelect'>
                                         <label>Categoria</label>
                                         <select id='categoriaSlc'> 
@@ -133,6 +122,8 @@ const divContenedor = () => {
                                 </section>
                                 <section class'section2'>
                                     <div id='mostrarListaLibros' class='mostrarListaLibros'>
+                                    </div>
+                                    <div id='loader' class='loader'>
                                     </div>
                                 </section>
                                 <section class='section3'>
@@ -146,9 +137,45 @@ const divContenedor = () => {
                             `
 
     main.appendChild(contenedor);
-    mostrarLibros()
-    agregarAlCarrito();
-    guardarCompra();
+    peticionFetch();
+    cargarPantalla();
+}
+
+const cargarPantalla = () => {
+    const idcontenedor = document.querySelector('#loader');
+
+    if (fetchCargado) {
+        mostrarLibros();
+    } else {
+        loader();
+        const intervalo = setInterval(() => {
+            if (fetchCargado) {
+                idcontenedor.style.display = 'none';
+                clearInterval(intervalo);
+                mostrarLibros();
+                agregarAlCarrito();
+                guardarCompra();
+            }
+        }, 3000);
+    }
+};
+
+const loader = () => {
+    const idcontenedor = document.querySelector('#loader');
+
+    idcontenedor.innerHTML = `
+                            <div class="dot-spinner">
+                            <div class="dot-spinner__dot"></div>
+                            <div class="dot-spinner__dot"></div>
+                            <div class="dot-spinner__dot"></div>
+                            <div class="dot-spinner__dot"></div>
+                            <div class="dot-spinner__dot"></div>
+                            <div class="dot-spinner__dot"></div>
+                            <div class="dot-spinner__dot"></div>
+                            <div class="dot-spinner__dot"></div>
+                            </div>
+                                `
+
 }
 
 const mostrarLibros = () => {
@@ -187,60 +214,77 @@ const agregarAlCarrito = () => {
 
     boton.forEach(e => {
         e.addEventListener('click', (e) => {
-            const producto = libros.obtenerProducto(e.target.id);
-            carrito.push(producto)
-            Toastify({
-                text: `${producto.nombre} se agrego al carrito`,
-                close: true,
-                gravity: 'bottom',
-                style: {
-                    color: 'black',
-                    background: "#ddc5b3",
-                }
-            }).showToast();
+            if (localStorage.getItem('sesionActiva')) {
+                const producto = libros.obtenerProducto(e.target.id);
+                carrito.push(producto)
+                Toastify({
+                    text: `${producto.nombre} se agrego al carrito`,
+                    close: true,
+                    gravity: 'bottom',
+                    style: {
+                        color: 'black',
+                        background: "#ddc5b3",
+                    }
+                }).showToast();
+            } else {
+                Swal.fire("Inicia sesion para comprar");
+            }
         })
     });
 }
 
 const guardarCompra = () => {
     const boton = document.querySelector('#finalizarCompra');
-    const mensaje = document.querySelector('#mensaje');
-    const carritoAnteriorJSON = obtenerDelStorage('carrito')
-    const carritoAnteriorOBJ = convertirAObj(carritoAnteriorJSON)
+    const userCarritoActualJSON = obtenerDelStorage('userCarrito')
+    let userCarritoActualOBJ = convertirAObj(userCarritoActualJSON) || [];
+    const sesionActivaJSON = obtenerDelStorage('sesionActiva');
+    const sesionActivaOBJ = convertirAObj(sesionActivaJSON);
+    let usernameActivo;
+    if (sesionActivaOBJ) usernameActivo = sesionActivaOBJ.username
 
-    if (carritoAnteriorOBJ != null) {
-        carritoAnteriorOBJ.forEach((e) => {
+    if (userCarritoActualOBJ != null) {
+        const usuarioCarritoActivo = userCarritoActualOBJ.find(user => user.username === usernameActivo)
+        !usuarioCarritoActivo ? [] : usuarioCarritoActivo.carrito.forEach((e) => {
             carrito.push(e);
         })
     }
 
-    boton.addEventListener('click', () => {
-        if (carrito.length > 0) {
-            const carritoJSON = convertirAJSON(carrito);
-            guardarEnStorage('carrito', carritoJSON);
-            location.href = "carrito.html";
-        } else {
-            mensaje.innerHTML = `<h3>Debe seleccionar al menos un producto para finalizar la compra</h3>`
-            setTimeout(() => {
-                mensaje.innerHTML = ''
-            }, 5000);
-        }
-    })
+    if (localStorage.getItem('sesionActiva')) {
+        boton.addEventListener('click', () => {
+            if (carrito.length > 0) {
+
+                const usuarioIndex = userCarritoActualOBJ.findIndex(user => user.username === usernameActivo);
+
+                if (usuarioIndex > -1) {
+                    userCarritoActualOBJ[usuarioIndex].carrito = userCarritoActualOBJ[usuarioIndex].carrito.concat(carrito);
+                } else {
+                    userCarritoActualOBJ.push({ username: usernameActivo, carrito });
+                }
+                guardarEnStorage('userCarrito', userCarritoActualOBJ);
+                location.href = "carrito.html";
+            } else {
+                Swal.fire("Debe seleccionar al menos un producto para finalizar la compra");
+            }
+        })
+    } else {
+        boton.style.display = 'none';
+    }
 }
 
 //LOCAL STORAGE
 
-const guardarEnStorage = (nombreProducto) => {
-    const carritoJSON = convertirAJSON(carrito);
-    agregarAStorage(nombreProducto, carritoJSON);
+const guardarEnStorage = (nombreClave, valor) => {
+    const valorJSON = convertirAJSON(valor);
+    agregarAStorage(nombreClave, valorJSON);
 }
+
 
 const convertirAJSON = (elemento) => {
     return JSON.stringify(elemento);
 }
 
-const convertirAObj = (elemento) => {
-    return JSON.parse(elemento);
+const convertirAObj = (objJSON) => {
+    return JSON.parse(objJSON);
 }
 
 const agregarAStorage = (nombre, valor) => {
@@ -250,7 +294,6 @@ const agregarAStorage = (nombre, valor) => {
 const obtenerDelStorage = (clave) => {
     return localStorage.getItem(clave);
 }
-
 
 divContenedor();
 

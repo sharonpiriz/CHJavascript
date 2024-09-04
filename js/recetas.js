@@ -1,37 +1,7 @@
-//VARIABLES GLOBALES
-let paginaRecetaActiva = false;
-let eliminarFuncionEjecutado = false;
-let divContenedorEjecutado = false;
-
 //CLASES
 class Recetas {
     constructor() {
-        this.recetas = [
-            {
-                nombre: 'wrap',
-                ingredientes: 'tortita, queso',
-                preparacion: 'poner el queso en la tortita',
-                categoria: 'Almuerzo'
-            },
-            {
-                nombre: 'tortilla',
-                ingredientes: 'papa, huevo',
-                preparacion: 'cocinar la papa y mezclar con el huevo',
-                categoria: 'Cena'
-            },
-            {
-                nombre: 'cupcakes',
-                ingredientes: 'harina, manteca, huevo, buttercream',
-                preparacion: 'realizar la masa, hornear y luego decorar',
-                categoria: 'Merienda'
-            },
-            {
-                nombre: 'salmon a la plancha',
-                ingredientes: 'salmon, condimentos',
-                preparacion: 'poner los condimentos en el salmon y hacer a la parrilla hasta obtener la coccion deseada',
-                categoria: 'Cena'
-            }
-        ];
+        this.recetas = [];
     }
 
     agregarReceta(receta) {
@@ -48,6 +18,10 @@ class Recetas {
         return recetasEncontradas;
     }
 
+    encontrarIndex(nombre) {
+        return this.recetas.findIndex(e => e.nombre === nombre)
+    }
+
     eliminarReceta(index) {
         this.recetas.splice(index, 1);
     }
@@ -57,45 +31,48 @@ class Recetas {
         if (this.recetas.length > 0) {
             if (categoria === 'Todas') {
                 return this.recetas?.map((e, index) => `
-                    <div id='card' class='card'>
-                        <div class='header'>
-                            <p class='alert'><strong>Receta: </strong>${e.nombre}</p>
-                        </div>
-                        <p class='message'>
-                            <strong>Ingredientes: </strong>${e.ingredientes} <br>
-                            <strong>Preparacion: </strong>${e.preparacion} <br>
-                            <strong>Categoria: </strong>${e.categoria}
-                        </p>
-                        <div class='actions'>
-                            <a id='${index}' class='eliminarReceta read'>
-                            Eliminar Receta
-                            </a>
-                        </div>
-                    </div>
-                    `
+                                        <div class="card">
+                                            <div class="header">
+                                                <p class="title">${e.nombre}</p>
+                                            </div>
+                                            <div class="info">
+                                                <p class='titulo'><strong>Ingredientes:</strong></p>
+                                                <p class='descripcion'>${e.ingredientes}</p>
+                                                <p class='titulo'><strong>Preparacion:</strong></p>
+                                                <p class='descripcion'>${e.preparacion}</p>
+                                                <p class='titulo'><strong>Categoria:</strong></p>
+                                                <p class='descripcion'>${e.categoria}</p>
+                                            </div>
+                                            <div class="footer">
+                                                <p class="tag">#Receta #Food </p>
+                                                <button type="button" id='${index}' class="eliminarReceta action">Eliminar receta</button>
+                                            </div>
+                                        </div>
+                                        `
                 ).join('');
             } else {
                 const recetasFiltradas = this.recetas.filter(e => e.categoria === categoria)
-                return recetasFiltradas.map((e, index) => {
-                    ix = this.recetas.findIndex(receta => receta.ingredientes === e.ingredientes)
+                return recetasFiltradas.map((e) => {
+                    ix = this.recetas.findIndex(receta => receta.nombre === e.nombre)
                     return `
-
-                    <div id='card' class='card'>
-                        <div class='header'>
-                            <p class='alert'><strong>Receta: </strong>${e.nombre}</p>
-                        </div>
-                        <p class='message'>
-                            <strong>Ingredientes: </strong>${e.ingredientes} <br>
-                            <strong>Preparacion: </strong>${e.preparacion} <br>
-                            <strong>Categoria: </strong>${e.categoria}
-                        </p>
-                        <div class='actions'>
-                            <a id='${ix}' class='eliminarReceta read'>
-                            Eliminar Receta
-                            </a>
-                        </div>
-                    </div>
-                                                    `
+                            <div class="card">
+                                <div class="header">
+                                    <p class="title">${e.nombre}</p>
+                                </div>
+                                <div class="info">
+                                    <p class='titulo'><strong>Ingredientes:</strong></p>
+                                    <p class='descripcion'>${e.ingredientes}</p>
+                                    <p class='titulo'><strong>Preparacion:</strong></p>
+                                    <p class='descripcion'>${e.preparacion}</p>
+                                    <p class='titulo'><strong>Categoria:</strong></p>
+                                    <p class='descripcion'>${e.categoria}</p>
+                                </div>
+                                <div class="footer">
+                                    <p class="tag">#Receta #Food </p>
+                                    <button type="button" id='${ix}' class="eliminarReceta action">Eliminar receta</button>
+                                </div>
+                            </div>
+                             `
                 }).join('');
             }
         } else {
@@ -116,17 +93,10 @@ class Receta {
 const recetas = new Recetas();
 
 //DIV CONTENEDOR
-
 const divContenedor = () => {
     const contenedor = document.querySelector('#contenedor');
-    paginaRecetaActiva = false;
-    divContenedorEjecutado = false;
 
-    contenedor.innerHTML = ` 
-                            <section> 
-                                <h1>Todas las recetas</h1>
-                            </section> 
-
+    contenedor.innerHTML = `
                             <section class='sectionContenedor'> 
                                 <div class='agregarRecetaDiv'>
                                     <button id='agregarReceta' class='agregarReceta'>Agregar receta</button>
@@ -148,34 +118,25 @@ const divContenedor = () => {
                                 </div>
                                 <div id='contenedorBoton'>
                                 </div>
-                                <div id='mensaje'>
-                                    
-                                </div>
                             </section>
-                            `
+                              `
 
+    const agregarRecetaButton = document.querySelector('#agregarReceta')
+
+    agregarRecetaButton.addEventListener('click', () => {
+        location.href = "agregarReceta.html";
+    })
+
+    obtenerRecetasAgregadas();
     mostrarRecetas();
-    agregarReceta();
     buscarReceta();
     eliminarReceta();
 }
 
-//MOSTRAR MENSAJE
-const actualizarMensaje = (msj) => {
-    const mensaje = document.querySelector('#mensaje')
-
-    mensaje.innerHTML = eliminarFuncionEjecutado ? `<h3>${msj}</h3>` : ``
-
-    if (eliminarFuncionEjecutado) {
-        setTimeout(() => {
-            mensaje.innerHTML = '';
-        }, 3000);
-    }
-}
+main.appendChild(contenedor);
 
 
 //MOSTRAR RECETAS LAYOUT
-
 const mostrarRecetas = () => {
     const select = document.querySelector('#categorias');
     const mostrarRecetasDiv = document.querySelector('#mostrarRecetas');
@@ -193,104 +154,56 @@ const mostrarRecetas = () => {
         else {
             mostrarRecetasDiv.innerHTML = `<h3>No se encontraron recetas en esta categoria<h3>`;
         }
-
     })
 }
-
-// AGREGAR RECETAS LAYOUT
-
-const agregarReceta = () => {
-
-    const agregarRecetaButton = document.querySelector('#agregarReceta');
-
-    agregarRecetaButton.addEventListener('click', () => {
-        paginaRecetaActiva = true;
-        contenedor.innerHTML = `
-                                <form class="form formulario">
-                                    <p class="form-title">Agrega tu receta!</p>
-                                    <div class="input-container">
-                                        <input id='nombreReceta' type="text" placeholder="Nombre de receta">
-                                        <span>
-                                        </span>
-                                    </div>
-                                    <div class="input-container">
-                                        <input id='ingredientesReceta' type="text" placeholder="Ingedientes">
-                                    </div>
-                                    <div class="input-container">
-                                        <input id='preparacionReceta' type="text" placeholder="Preparacion">
-                                    </div>
-                                    <div class="input-container">
-                                        <label>Categoria</label>
-                                        <select id='categorias'>
-                                            ${agregarCategorias()}
-                                        </select>
-                                    </div>
-
-                                    <button type="submit" id='agregarReceta2' class="submit">
-                                        Guardar
-                                    </button>
-                                </form>
-                                `;
-
-        const agregarReceta2Button = document.querySelector('#agregarReceta2');
-
-        agregarReceta2Button.addEventListener('click', () => {
-            const nombre = document.querySelector('#nombreReceta').value;
-            const ingredientes = document.querySelector('#ingredientesReceta').value;
-            const preparacion = document.querySelector('#preparacionReceta').value;
-            const categoria = document.querySelector('#categorias').value;
-
-            crearReceta({ nombre, ingredientes, preparacion, categoria })
-            divContenedor();
-            actualizarMensaje('La receta ha sido creada');
-        })
-    })
-}
-
-main.appendChild(contenedor);
 
 //AGREGAR CATEGORIAS LAYOUTS
-
 const agregarCategorias = () => {
     const categorias = ['Todas', 'Desayuno', 'Almuerzo', 'Merienda', 'Cena', 'Postre'];
     let opciones = '';
 
     for (const c of categorias) {
-        if (c === 'Todas' && paginaRecetaActiva === true) {
-            opciones += `<option disabled value='${c}'>${c}</option>`;
-        } else {
-            opciones += `<option value='${c}'>${c}</option>`;
-        }
-
+        opciones += `<option value='${c}'>${c}</option>`;
     }
 
     return opciones;
 }
 
 //BUSCAR RECETAS LAYOUT
-
 const buscarReceta = () => {
     const mostrarRecetasDiv = document.querySelector('#mostrarRecetas');
     const buscarRecetaButton = document.querySelector('#buscarReceta');
-    const contenedorBoton = document.querySelector('#contenedorBoton')
+    const contenedorBoton = document.querySelector('#contenedorBoton');
 
     buscarRecetaButton.addEventListener('click', () => {
         mostrarRecetasDiv.innerHTML = '';
         const buscarRecetaValue = document.querySelector('#textoBuscar').value;
-        const boton = document.createElement('button');
-        boton.setAttribute('id', 'botonVolver');
-        boton.setAttribute('class', 'btn');
-        const contenido = document.createTextNode('Volver a la lista');
 
-        boton.appendChild(contenido);
-        contenedorBoton.appendChild(boton);
-        console.log('me ejecute')
+        if (buscarRecetaValue != " " && buscarRecetaValue != null && buscarRecetaValue.length != 0) {
+            const obtenerBoton = document.querySelector('#botonVolver')
 
-        mostrarRecetasDiv.innerHTML = informacionBuscarReceta(buscarRecetaValue);
+            if (obtenerBoton === null) {
+                const boton = document.createElement('button');
+                boton.setAttribute('id', 'botonVolver');
+                boton.setAttribute('class', 'btn');
+                const contenido = document.createTextNode('Volver a la lista');
+                boton.appendChild(contenido);
+                contenedorBoton.appendChild(boton);
 
-        boton.addEventListener('click', () => {
-            divContenedor();
-        })
+                boton.addEventListener('click', () => {
+                    divContenedor();
+                })
+            }
+
+            mostrarRecetasDiv.innerHTML = informacionBuscarReceta(buscarRecetaValue);
+            eliminarReceta()
+
+        }
+        else {
+            mostrarRecetasDiv.innerHTML = '';
+            divContenedor()
+            Swal.fire("Debe ingresar un valor en el buscador");
+        }
     })
 }
 
@@ -301,19 +214,41 @@ const eliminarReceta = () => {
 
     boton.forEach((e) => {
         e.addEventListener('click', (e) => {
+            console.log(e.target.id)
             recetas.eliminarReceta(e.target.id)
-            eliminarFuncionEjecutado = true;
-            divContenedor();
-            actualizarMensaje('La receta ha sido eliminada');
+            const objJSON = convertirAJSON(recetas.recetas);
+            actualizarLS(objJSON, 'recetas')
+            location.reload()
         })
     })
 }
 
-//FUNCION AGREGAR RECETA
+//FUNCION CREAR RECETA
 
-function crearReceta({ nombre, ingredientes, preparacion, categoria }) {
+function crearReceta(nombre, ingredientes, preparacion, categoria) {
     const receta1 = new Receta(nombre, ingredientes, preparacion, categoria);
     recetas.agregarReceta(receta1)
+}
+
+//MANEJO DE AGREGAR RECETA DESDE EL STORAGE
+
+const obtenerRecetasAgregadas = () => {
+    if (localStorage.getItem('recetas')) {
+        const recetasJSON = obtenerStorage('recetas');
+        const recetasOBJ = convertirAObj(recetasJSON);
+
+        for (let r of recetasOBJ) {
+            const recetaExistente = recetas.recetas.some(receta =>
+                receta.nombre === r.nombre &&
+                receta.ingredientes === r.ingredientes &&
+                receta.preparacion === r.preparacion &&
+                receta.categoria === r.categoria
+            );
+
+            if (!recetaExistente) crearReceta(r.nombre, r.ingredientes, r.preparacion, r.categoria);
+
+        }
+    }
 }
 
 //FUNCION BUSCAR RECETA
@@ -322,24 +257,30 @@ function informacionBuscarReceta(textoABuscar) {
     let recetasEncontradas = recetas.buscarReceta(textoABuscar);
 
     if (recetasEncontradas.length > 0) {
-        return recetasEncontradas?.map((e, index) => `
+        let index
+        return recetasEncontradas?.map((e) => {
+            index = recetas.encontrarIndex(e.nombre);
+            return `
 
-         <div id='card' class='card'>
-            <div class='header'>
-                <p class='alert'><strong>Receta: </strong>${e.nombre}</p>
+            <div class="card">
+                <div class="header">
+                    <p class="title">${e.nombre}</p>
+                </div>
+                <div class="info">
+                    <p class='titulo'><strong>Ingredientes:</strong></p>
+                    <p class='descripcion'>${e.ingredientes}</p>
+                    <p class='titulo'><strong>Preparacion:</strong></p>
+                    <p class='descripcion'>${e.preparacion}</p>
+                    <p class='titulo'><strong>Categoria:</strong></p>
+                    <p class='descripcion'>${e.categoria}</p>
+                </div>
+                <div class="footer">
+                    <p class="tag">#Receta #Food </p>
+                    <button type="button" id='${index}' class="eliminarReceta action">Eliminar receta</button>
+                </div>
             </div>
-            <p class='message'>
-                <strong>Ingredientes: </strong>${e.ingredientes} <br>
-                <strong>Preparacion: </strong>${e.preparacion} <br>
-                <strong>Categoria: </strong>${e.categoria}
-            </p>
-            <div class='actions'>
-                <a id='${index}' class='eliminarReceta read'>
-                Eliminar Receta
-                </a>
-            </div>
-        </div>
-        `
+                `
+        }
         ).join('');
     }
     else {
@@ -357,13 +298,26 @@ const obtenerStorage = (clave) => {
     return localStorage.getItem(clave);
 }
 
+const convertirAObj = (elemento) => {
+    return JSON.parse(elemento);
+}
+
+const convertirAJSON = (array) => {
+    return JSON.stringify(array);
+}
+
 const actualizarStorage = (clave, valor) => {
     eliminarStorage(clave);
     localStorage.setItem(clave, valor);
 }
 
-const eliminarStorage = () => {
+const eliminarStorage = (clave) => {
     localStorage.removeItem(clave);
+}
+
+const actualizarLS = (nuevoArrayJSON, claveAremover) => {
+    eliminarStorage(claveAremover);
+    if (recetas.recetas.length != 0) localStorage.setItem('recetas', nuevoArrayJSON);
 }
 
 //LLAMADO DE FUNCIONES
