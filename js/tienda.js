@@ -94,7 +94,7 @@ const libros = new Libros();
 
 //FETCH
 const peticionFetch = () => {
-    fetch('/productosTienda.json')
+    fetch('https://syc-tickets-backend.up.railway.app/recipes')
         .then((respuesta) => respuesta.json())
         .then((data) => {
             fetchCargado = true;
