@@ -3,7 +3,7 @@
 let objetoSesion = '';
 let usernameActivo = '';
 
-(localStorage.getItem('sesionActiva')) ? objetoSesion = JSON.parse(localStorage.getItem('sesionActiva')) : objetoSesion = ''
+(!localStorage.getItem('sesionActiva')) ? objetoSesion = '' : objetoSesion = JSON.parse(localStorage.getItem('sesionActiva'))
 
 if (objetoSesion) usernameActivo = objetoSesion.username
 
@@ -152,8 +152,6 @@ const manejoPantallas = () => {
     })
 
     if (localStorage.getItem('sesionActiva')) registro.style.display = 'none';
-
-
 }
 
 incializador()

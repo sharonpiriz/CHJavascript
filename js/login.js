@@ -38,6 +38,7 @@ const inicializarContenedor = () => {
 
         if (!usuarioValido) {
             Swal.fire("El username o password es incorrecto");
+            localStorage.removeItem('sesionActiva')
         }
         else {
             Swal.fire({
