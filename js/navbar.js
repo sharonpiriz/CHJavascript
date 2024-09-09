@@ -37,54 +37,77 @@ const secciones = [
 const incializador = () => {
 
     document.addEventListener('DOMContentLoaded', () => {
-        const body = document.querySelector('#sctNav');
+        const contenedor = document.querySelector('#container');
 
         //CREACION DE NAV
         const nav = document.createElement('nav');
-        nav.className = 'mask';
+        nav.className = 'navbar';
 
-        body.appendChild(nav);
+        contenedor.appendChild(nav);
 
         const aLogo = document.createElement('a');
         aLogo.setAttribute('href', 'index.html');
+        aLogo.className = 'brand';
         aLogo.innerHTML = 'Home';
         nav.appendChild(aLogo);
 
+        //CREACION DE BURGUER
+
+        const divBurguer = document.createElement('div');
+        divBurguer.className = 'burger';
+        divBurguer.id = 'burger';
+        divBurguer.innerHTML = `
+                                <span class="burger-line"></span>
+                                <span class="burger-line"></span>
+                                <span class="burger-line"></span>
+                                `
+        nav.appendChild(divBurguer);
+
+        const span = document.createElement('span');
+        span.className = "overlay";
+        nav.appendChild(span);
+
+
         //CREACION DE UL Y LI
+        const divMenu = document.createElement('div');
+        divMenu.className = 'menu';
+        divMenu.id = "menu";
+        nav.appendChild(divMenu);
+
         const ul = document.createElement('ul');
-        ul.className = 'list';
-        nav.appendChild(ul)
+        ul.className = 'menu-inner';
+        divMenu.appendChild(ul)
 
         for (const s of secciones) {
             if (s.nombre === 'Login') {
                 ul.innerHTML += `
-                        <li><a href=# id='login'>${s.nombre}</a></li>
+                        <li class='menu-item'><a href=# class='menu-link' id='login'>${s.nombre}</a></li>
                         `
             } else if (s.nombre === 'Recetas') {
                 ul.innerHTML += `
-                <li><a href=# id='recetas'>${s.nombre}</a></li>
+                <li class='menu-item'><a href=# class='menu-link' id='recetas'>${s.nombre}</a></li>
                 `
             } else if (s.nombre === 'Carrito') {
                 ul.innerHTML += `
-                <li><a href=# id='carrito'>${s.nombre}</a></li>
+                <li class='menu-item'><a href=# class='menu-link' id='carrito'>${s.nombre}</a></li>
                 `
             } else if (s.nombre === 'Registro') {
                 ul.innerHTML += `
-                <li><a href=${s.direccion} id='registro'>${s.nombre}</a></li>
+                <li class='menu-item'><a href=${s.direccion} class='menu-link' id='registro'>${s.nombre}</a></li>
                 `
             } else if (s.id === 'nombre') {
                 if (objetoSesion) {
                     ul.innerHTML += `
-                    <li><a>${s.nombre}</a></li>
+                    <li class='menu-item'><a class='menu-link' >${s.nombre}</a></li>
                     `
                 } else {
                     ul.innerHTML += `
-                    <li><a>Bienvenido</a></li>
+                    <li class='menu-item'><a class='menu-link' >Bienvenido</a></li>
                     `
                 }
             } else {
                 ul.innerHTML += `
-            <li><a href='${s.direccion}'>${s.nombre}</a></li>
+            <li class='menu-item'><a href='${s.direccion}' class='menu-link'>${s.nombre}</a></li>
             `
             }
         }
@@ -120,7 +143,7 @@ const login = () => {
                 if (result.isConfirmed) {
                     localStorage.removeItem('sesionActiva');
                     idLogin.textContent = 'Login';
-                    location.reload();
+                    location.href = 'login.html'
                 }
             });
         }
@@ -154,5 +177,30 @@ const manejoPantallas = () => {
     if (localStorage.getItem('sesionActiva')) registro.style.display = 'none';
 }
 
+//Menu burguer
+const navbarMenu = document.getElementById("menu");
+const burgerMenu = document.getElementById("burger");
+const bgOverlay = document.querySelector(".overlay");
+
+if (burgerMenu && navbarMenu && bgOverlay) {
+    burgerMenu.addEventListener("click", () => {
+        navbarMenu.classList.toggle("is-active");
+        bgOverlay.classList.toggle("is-active");
+    });
+
+    bgOverlay.addEventListener("click", () => {
+        navbarMenu.classList.toggle("is-active");
+        bgOverlay.classList.toggle("is-active");
+    });
+}
+
+document.querySelectorAll(".menu-link").forEach((link) => {
+    link.addEventListener("click", () => {
+        navbarMenu.classList.remove("is-active");
+        bgOverlay.classList.remove("is-active");
+    });
+});
+
 incializador()
+
 

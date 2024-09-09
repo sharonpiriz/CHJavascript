@@ -57,32 +57,37 @@ const inicializarContenedor = () => {
 
         const usuarioRegistrado = usuarios.find(e => e.email === email)
 
-        if (usuarioRegistrado) {
-            Swal.fire("El usuario con ese email ya esta registrado");
+        if (!username || !password || !email) {
+            Swal.fire("Los campos username, password y email deben estar completos");
         } else {
-            usuarios.push({
-                username: username,
-                email: email,
-                password: password
-            })
+            if (usuarioRegistrado) {
+                Swal.fire("El usuario con ese email ya esta registrado");
+            } else {
+                usuarios.push({
+                    username: username,
+                    email: email,
+                    password: password
+                })
 
-            guardarEnLocal('usuarios', usuarios)
+                guardarEnLocal('usuarios', usuarios)
 
-            Swal.fire({
-                showDenyButton: true,
-                title: "Usuario registrado",
-                confirmButtonColor: "#3085d6",
-                confirmButtonText: "Ir a login",
-                denyButtonText: `Registrar otro usuario`
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    location.href = 'login.html'
-                } else if (result.isDenied) {
-                    location.reload()
-                }
-            });
+                Swal.fire({
+                    showDenyButton: true,
+                    title: "Usuario registrado",
+                    confirmButtonColor: "#3085d6",
+                    confirmButtonText: "Ir a login",
+                    denyButtonText: `Registrar otro usuario`
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        location.href = 'login.html'
+                    } else if (result.isDenied) {
+                        location.reload()
+                    }
+                });
+            }
         }
     })
+
 }
 
 inicializarContenedor()

@@ -92,6 +92,14 @@ class Receta {
 //INSTANCIA DE CLASES
 const recetas = new Recetas();
 
+//VALIDACION DE LOGIN
+
+const validacionLogin = () => {
+    const user = JSON.parse(localStorage.getItem('sesionActiva'));
+
+    if (!user) location.href = 'login.html'
+}
+
 //DIV CONTENEDOR
 const divContenedor = () => {
     const contenedor = document.querySelector('#contenedor');
@@ -126,7 +134,7 @@ const divContenedor = () => {
     agregarRecetaButton.addEventListener('click', () => {
         location.href = "agregarReceta.html";
     })
-
+    validacionLogin();
     obtenerRecetasAgregadas();
     mostrarRecetas();
     buscarReceta();

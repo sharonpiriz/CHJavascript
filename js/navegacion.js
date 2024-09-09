@@ -1,6 +1,7 @@
 const body = document.querySelector('#body');
 const container = document.querySelector('.container');
 
+
 //NavBar
 const logo = document.createElement('div');
 logo.className = 'logo';
@@ -28,7 +29,13 @@ for (const menu of menuSecciones) {
         nav.innerHTML += `<a href='#' id='login'>${menu.nombre}</a>`;
     } else if (menu.nombre === 'Registro') {
         nav.innerHTML += `<a href=${menu.Url} id='registro'>${menu.nombre}</a>`;
+    } else if (menu.nombre === 'Recetas') {
+        nav.innerHTML += `<a href='#' id='recetas'>${menu.nombre}</a>`;
     }
+    else if (menu.nombre === 'Carrito') {
+        nav.innerHTML += `<a href='#' id='carrito'>${menu.nombre}</a>`;
+    }
+
     else {
         nav.innerHTML += `<a href=${menu.Url}>${menu.nombre}</a>`;
     }
@@ -82,7 +89,20 @@ const Login = () => {
     })
 }
 
-Login()
+const manejoPantallas = () => {
+    const recetas = document.querySelector('#recetas')
+    const carrito = document.querySelector('#carrito')
 
+    recetas.addEventListener('click', () => {
+        !localStorage.getItem('sesionActiva') ? Swal.fire("Inicia sesion para ver esta seccion") : location.href = 'recetas.html'
+    })
+
+    carrito.addEventListener('click', () => {
+        !localStorage.getItem('sesionActiva') ? Swal.fire("Inicia sesion para ver esta seccion") : location.href = 'carrito.html'
+    })
+}
+
+Login()
+manejoPantallas();
 
 

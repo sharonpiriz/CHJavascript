@@ -135,8 +135,14 @@ const manejoDePayment = () => {
     pagarButton.addEventListener('click', () => {
         Swal.fire({
             title: "Pago realizado",
+            text: "Seras redirigido a Home",
             icon: "success",
         });
+        eliminarCarritoDeUsuarioActivo();
+        setTimeout(() => {
+            location.href = 'index.html'
+        }, 3000)
+
     })
 
     const volverAlCarrito = document.querySelector('#volverAlCarrito')
@@ -145,6 +151,26 @@ const manejoDePayment = () => {
         location.href = 'carrito.html'
     })
 
+}
+
+const eliminarCarritoDeUsuarioActivo = () => {
+    //Obtengo el username del usuario activo
+    const sesionActivaJSON = localStorage.getItem('sesionActiva');
+    const sesionActiva = JSON.parse(sesionActivaJSON);
+    const usuarioActivo = sesionActiva.username;
+
+    //Obtengo el carrito de los usuarios
+    const userCarritoJSON = localStorage.getItem('userCarrito');
+    const userCarrito = JSON.parse(userCarritoJSON);
+
+    //Busco los carritos de los usuarios que no sean el usuario actual
+    const carritoUserNoActual = userCarrito.filter(user => user.username != usuarioActivo);
+
+    //Actualizo el local storage
+    const carritoUserNoActualJSON = JSON.stringify(carritoUserNoActual);
+
+    localStorage.removeItem('userCarrito');
+    localStorage.setItem('userCarrito', carritoUserNoActualJSON);
 }
 
 divContenedor()

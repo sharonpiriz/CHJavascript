@@ -114,19 +114,36 @@ const mostrarLibros = () => {
 
 const eliminarDeCarrito = () => {
     const boton = document.querySelectorAll('.eliminarCarrito');
+    const userCarritosJSON = obtenerDelStorage('userCarrito')
+    let userCarritos = convertirAObj(userCarritosJSON) || [];
+    const sesionActivaJSON = obtenerDelStorage('sesionActiva');
+    const sesionActivaOBJ = convertirAObj(sesionActivaJSON);
+    let usernameActivo;
+    if (sesionActivaOBJ) usernameActivo = sesionActivaOBJ.username
+
+    const userCarritosSinUsuarioActual = userCarritos.filter(user => user.username != usernameActivo)
 
     boton.forEach(e => {
         e.addEventListener('click', (e) => {
             removerObjDeArray(e.target.id);
+
             userCarrito.push({
                 username: usernameActivo,
                 carrito: carrito
             })
 
+            if (userCarritosSinUsuarioActual && userCarritosSinUsuarioActual.length > 0) {
+                userCarritosSinUsuarioActual.forEach(e => {
+                    userCarrito.push({
+                        username: e.username,
+                        carrito: e.carrito
+                    })
+                })
+            }
             const objJSON = convertirAJSON(userCarrito);
             actualizarLS('userCarrito', objJSON)
-            location.reload();
 
+            location.reload()
         })
     })
 }

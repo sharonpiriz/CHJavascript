@@ -122,3 +122,67 @@ scale: 1;
     .swal2-cancel{
         background-color: #B9B9B9 !important;
     }
+
+/*MEDIA QUERIES*/
+
+/*390 x 844*/
+
+@media (max-width: 390px) and (max-height: 844px) {
+    body {
+        font-size: 14px; 
+        padding: 10px;
+        margin-top: 50px;
+    }
+
+    #contenedor {
+        width: 90%;
+        margin-top: 20px;
+        padding-top: 20px; 
+        grid-template-columns: 1fr;
+    }
+
+    .section2 {
+        padding: 0 10px;
+    }
+
+    #mostrarProductos {
+        padding: 0 10px; 
+    }
+
+    .itemContenedor {
+        width: 100%; 
+        grid-template-columns: 1fr; 
+        font-size: 16px; 
+        margin-bottom: 30px; 
+        padding: 10px; 
+    }
+
+    #mostrarDatos {
+        width: 100%; 
+        height: auto; 
+        font-size: 18px;
+        margin-bottom: 10px;
+    }
+
+    .pTotal {
+        font-size: 24px; 
+    }
+
+    .infodetais {
+        margin: 15px 0; 
+    }
+
+    .infodetais div {
+        margin-bottom: 15px; 
+    }
+
+    .divBoton {
+        margin-top: 20px;
+    }
+
+    .boton {
+        padding: 8px 16px; 
+        font-size: 16px; 
+    }
+
+}

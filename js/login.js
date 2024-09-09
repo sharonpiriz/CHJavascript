@@ -43,11 +43,11 @@ const inicializarContenedor = () => {
         else {
             Swal.fire({
                 title: `Bienvenido ${usuarioValido.username}`,
-                text: 'Serás redirigido a la página de recetas.',
+                text: 'Serás redirigido a la página de Home.',
                 confirmButtonText: 'OK'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    location.href = 'recetas.html';
+                    location.href = 'index.html';
                 }
             });
         }
